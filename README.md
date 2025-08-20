@@ -11,12 +11,11 @@ This is a web application for managing vehicle bookings, approvals, and usage.
 -   [Running the Application](#running-the-application)
 -   [Dummy Credentials](#dummy-credentials)
 -   [Application Usage Guide](#application-usage-guide)
--   [Diagrams](#diagrams)
+-   [Activity Diagram](#activity-diagram)
 
-## Diagrams
+## Activity Diagram
 
--   [Activity Diagram](https://drive.google.com/file/d/1oZj2fIzck-Ohl_gfxaeF10_tON2Zxc3R/view?usp=drive_link)
--   [Physical Diagram](https://drive.google.com/file/d/1rAvrCIGw-8N3TNk3sjLQhX-Acz_3d3A3/view?usp=drive_link)
+[Activity Diagram](https://drive.google.com/file/d/1oZj2fIzck-Ohl_gfxaeF10_tON2Zxc3R/view?usp=drive_link)
 
 ## Technologies Used
 
@@ -59,6 +58,9 @@ For testing purposes, you can use the following credentials (if you ran the seed
 | Approver | `aapprover1@example.com` | `approver123` |
 
 ## Application Usage Guide
+
+For Temporary Demonstration, the application can be access via : `http://itstaging.samamajuprima.co.id:3003/login`
+Feel free to accessing and give the feedback.
 
 1.  **Login:**
     Navigate to the application URL (e.g., `http://localhost:3000/login`) and log in with the provided credentials.
