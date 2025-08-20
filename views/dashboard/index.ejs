@@ -1,0 +1,81 @@
+<% layout('layouts/layout') -%>
+
+<h1>Vehicle Usage Dashboard</h1>
+
+<div class="container mt-4">
+	<div class="card shadow-sm mb-4">
+		<div class="card-header bg-primary text-white">
+			<h3 class="mb-0">Approved Bookings by Vehicle</h3>
+		</div>
+		<div class="card-body">
+			<canvas style="height: 600px" id="vehicleUsageChart"></canvas>
+		</div>
+	</div>
+
+	<div class="card shadow-sm">
+		<div class="card-header bg-primary text-white">
+			<h3 class="mb-0">Booking Counts by Date</h3>
+		</div>
+		<div class="card-body">
+			<canvas style="height: 600px" id="bookingCountsChart"></canvas>
+		</div>
+	</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+	const vehicleChartData = <%- vehicleChartData %>;
+	const dateChartData = <%- dateChartData %>;
+
+	// Vehicle Usage Chart
+	const vehicleCtx = document.getElementById('vehicleUsageChart').getContext('2d');
+	new Chart(vehicleCtx, {
+	  type: 'bar',
+	  data: vehicleChartData,
+	  options: {
+	    scales: {
+	      y: {
+	        beginAtZero: true,
+	        title: {
+	          display: true,
+	          text: 'Number of Approved Bookings'
+	        }
+	      },
+	      x: {
+	        title: {
+	          display: true,
+	          text: 'Vehicle Model'
+	        }
+	      }
+	    },
+	    responsive: true,
+	    maintainAspectRatio: false
+	  }
+	});
+
+	// Booking Counts by Date Chart
+	const dateCtx = document.getElementById('bookingCountsChart').getContext('2d');
+	new Chart(dateCtx, {
+	  type: 'line',
+	  data: dateChartData,
+	  options: {
+	    scales: {
+	      y: {
+	        beginAtZero: true,
+	        title: {
+	          display: true,
+	          text: 'Number of Bookings'
+	        }
+	      },
+	      x: {
+	        title: {
+	          display: true,
+	          text: 'Date'
+	        }
+	      }
+	    },
+	    responsive: true,
+	    maintainAspectRatio: false
+	  }
+	});
+</script>

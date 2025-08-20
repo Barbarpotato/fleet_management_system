@@ -1,0 +1,97 @@
+<% layout('layouts/layout') -%>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Booking Details: <%= booking.booking_number %></h3>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Booking ID:</strong> <%= booking.id %>
+                </div>
+                <div class="col-md-6">
+                    <strong>Status:</strong> <span class="badge bg-<%= booking.status === 'APPROVED' ? 'success' : booking.status === 'PENDING' ? 'warning' : 'danger' %>"><%= booking.status %></span>
+                </div>
+            </div>
+
+            <hr>
+
+            <h4>Vehicle & Driver Information</h4>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Vehicle:</strong> <%= booking.vehicle.model %> (<%= booking.vehicle.licensePlate %>)
+                </div>
+                <div class="col-md-6">
+                    <strong>Driver:</strong> <%= booking.driver.name %> (<%= booking.driver.driver_number %>)
+                </div>
+            </div>
+
+            <hr>
+
+            <h4>Booking Period & Destination</h4>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Start Date:</strong> <%= booking.startDate.toLocaleDateString() %>
+                </div>
+                <div class="col-md-6">
+                    <strong>End Date:</strong> <%= booking.endDate.toLocaleDateString() %>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <strong>Destination:</strong> <%= booking.destination %>
+                </div>
+            </div>
+
+            <hr>
+
+            <h4>Approval Status</h4>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Approver 1:</strong> <%= booking.approver1.fullName %>
+                    <% const approval1 = booking.approvals.find(app => app.approverId === booking.approver1Id && app.level === 1); %>
+                    <% if (approval1) { %>
+                        <span class="badge bg-<%= approval1.status === 'APPROVED' ? 'success' : 'danger' %>"><%= approval1.status %></span>
+                        <small class="text-muted">(<%= approval1.approvedAt.toLocaleString() %>)</small>
+                    <% } else { %>
+                        <span class="badge bg-secondary">Pending</span>
+                    <% } %>
+                </div>
+                <div class="col-md-6">
+                    <strong>Approver 2:</strong> <%= booking.approver2.fullName %>
+                    <% const approval2 = booking.approvals.find(app => app.approverId === booking.approver2Id && app.level === 2); %>
+                    <% if (approval2) { %>
+                        <span class="badge bg-<%= approval2.status === 'APPROVED' ? 'success' : 'danger' %>"><%= approval2.status %></span>
+                        <small class="text-muted">(<%= approval2.approvedAt.toLocaleString() %>)</small>
+                    <% } else { %>
+                        <span class="badge bg-secondary">Pending</span>
+                    <% } %>
+                </div>
+            </div>
+
+            <hr>
+
+            <h4>Approval History</h4>
+            <% if (booking.approvals && booking.approvals.length > 0) { %>
+                <ul class="list-group">
+                    <% booking.approvals.sort((a, b) => a.createdAt - b.createdAt).forEach(approval => { %>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Level <%= approval.level %> Approval by <%= approval.approver.fullName %>:</strong>
+                                <span class="badge bg-<%= approval.status === 'APPROVED' ? 'success' : 'danger' %>"><%= approval.status %></span>
+                            </div>
+                            <small class="text-muted"><%= approval.approvedAt.toLocaleString() %></small>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p>No approval history yet.</p>
+            <% } %>
+
+            <div class="mt-4">
+                <a href="/bookings" class="btn btn-secondary">Back to Bookings</a>
+            </div>
+        </div>
+    </div>
+</div>

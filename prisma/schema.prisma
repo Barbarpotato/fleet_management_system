@@ -1,0 +1,128 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  username   String    @unique
+  password   String
+  fullName   String
+  role       Role
+  department String?
+  createdAt  DateTime  @default(now())
+
+  approver1Bookings Booking[] @relation("Approver1Bookings")
+  approver2Bookings Booking[] @relation("Approver2Bookings")
+  approvals         Approval[] @relation("UserApproval")
+}
+
+enum Role {
+  ADMIN
+  APPROVER
+}
+
+model Vehicle {
+  id              Int       @id @default(autoincrement())
+  licensePlate    String    @unique
+  model           String
+  year            Int
+  status          VehicleStatus
+  lastOdometer    Int
+  vehicle_number  String @unique @default("")
+  createdAt       DateTime  @default(now())
+
+  bookings  Booking[]
+  usages    Usage[]
+}
+
+enum VehicleStatus {
+  ACTIVE
+  UNAVAILABLE
+}
+
+model Driver {
+  id          Int     @id @default(autoincrement())
+  name        String
+  licenseNo   String  @unique
+  isActive    Boolean @default(true)
+  driver_number String @unique
+  createdAt   DateTime  @default(now())
+
+  bookings    Booking[]
+  usages      Usage[]
+}
+
+model Booking {
+  id           Int          @id @default(autoincrement())
+  driverId     Int
+  driver       Driver       @relation(fields: [driverId], references: [id])
+  vehicleId    Int
+  vehicle      Vehicle      @relation(fields: [vehicleId], references: [id])
+  startDate    DateTime
+  endDate      DateTime
+  destination  String
+  status       BookingStatus @default(PENDING)
+  booking_number String @unique
+  vehicle_number String?
+  driver_number String?
+  createdAt    DateTime  @default(now())
+
+  approver1Id  Int
+  approver1    User         @relation("Approver1Bookings", fields: [approver1Id], references: [id])
+  approver2Id  Int
+  approver2    User         @relation("Approver2Bookings", fields: [approver2Id], references: [id])
+
+  approvals    Approval[]
+  usage        Usage?
+}
+
+enum BookingStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  ONGOING
+  COMPLETED
+}
+
+model Approval {
+  id          Int        @id @default(autoincrement())
+  bookingId   Int
+  booking     Booking    @relation(fields: [bookingId], references: [id])
+  approverId  Int
+  approver    User       @relation("UserApproval", fields: [approverId], references: [id])
+  level       Int
+  status      ApprovalStatus @default(PENDING)
+  approvedAt  DateTime?
+  booking_number String?
+  approver_username String?
+  createdAt   DateTime  @default(now())
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Usage {
+  id             Int      @id @default(autoincrement())
+  bookingId      Int      @unique
+  booking        Booking  @relation(fields: [bookingId], references: [id])
+  vehicleId      Int
+  vehicle        Vehicle  @relation(fields: [vehicleId], references: [id])
+  driverId       Int
+  driver         Driver   @relation(fields: [driverId], references: [id])
+  startOdometer  Int
+  endOdometer    Int
+  notes          String?
+  usage_number   String @unique
+  booking_number String?
+  vehicle_number String?
+  driver_number String?
+  createdAt      DateTime  @default(now())
+}

@@ -1,0 +1,30 @@
+<% layout('layouts/layout') -%>
+
+<h1>Users</h1>
+
+<div class="mb-3">
+  <a href="/users/create" class="btn btn-primary">Create User</a>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Full Name</th>
+      <th>Username</th>
+      <th>Role</th>
+      <th>Department</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.forEach(user => { %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.fullName %></td>
+        <td><%= user.username %></td>
+        <td><%= user.role %></td>
+        <td><%= user.department || '-' %></td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>

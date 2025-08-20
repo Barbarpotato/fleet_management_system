@@ -1,0 +1,75 @@
+<% layout('layouts/layout') -%>
+
+<h1>Vehicle Usage Records</h1>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+	<div>
+		<a href="/usages/create" class="btn btn-primary">Create Usage Record</a>
+	</div>
+	<form class="d-flex" role="search" action="/usages" method="GET">
+		<input
+			class="form-control me-2"
+			type="search"
+			placeholder="Search"
+			aria-label="Search"
+			name="filter"
+			value="<%= filter %>"
+		/>
+		<button class="btn btn-outline-success" type="submit">Search</button>
+	</form>
+</div>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Usage Number</th>
+			<th>Booking Number</th>
+			<th>Vehicle Number</th>
+			<th>Driver Number</th>
+			<th>Start Odometer</th>
+			<th>End Odometer</th>
+			<th>Notes</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% layout('layouts/layout') -%>
+
+		<h1>Vehicle Usage Records</h1>
+
+		<div class="mb-3">
+			<a href="/usages/create" class="btn btn-primary"
+				>Create Usage Record</a
+			>
+		</div>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Usage Number</th>
+					<th>Booking Number</th>
+					<th>Vehicle Number</th>
+					<th>Driver Number</th>
+					<th>Start Odometer</th>
+					<th>End Odometer</th>
+					<th>Notes</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% usages.forEach(usage => {
+				<tr>
+					<td><%= usage.id %></td>
+					<td><%= usage.usage_number %></td>
+					<td><%= usage.booking_number %></td>
+					<td><%= usage.vehicle_number %></td>
+					<td><%= usage.driver_number %></td>
+					<td><%= usage.startOdometer %></td>
+					<td><%= usage.endOdometer %></td>
+					<td><%= usage.notes %></td>
+				</tr>
+				<% }) %>
+			</tbody>
+		</table>
+	</tbody>
+</table>

@@ -1,0 +1,35 @@
+<% layout('layouts/layout') -%>
+
+<h1>Drivers</h1>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+	<div>
+		<a href="/drivers/create" class="btn btn-primary">Create Driver</a>
+	</div>
+	<form class="d-flex" role="search" action="/drivers" method="GET">
+		<button class="btn btn-outline-success" type="submit">Search</button>
+	</form>
+</div>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Driver Number</th>
+			<th>Name</th>
+			<th>License No</th>
+			<th>Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% drivers.forEach(driver => { %>
+		<tr>
+			<td><%= driver.id %></td>
+			<td><%= driver.driver_number %></td>
+			<td><%= driver.name %></td>
+			<td><%= driver.licenseNo %></td>
+			<td><%= driver.isActive ? 'Active' : 'Inactive' %></td>
+		</tr>
+		<% }); %>
+	</tbody>
+</table>
