@@ -53,7 +53,7 @@
                     <% const approval1 = booking.approvals.find(app => app.approverId === booking.approver1Id && app.level === 1); %>
                     <% if (approval1) { %>
                         <span class="badge bg-<%= approval1.status === 'APPROVED' ? 'success' : 'danger' %>"><%= approval1.status %></span>
-                        <small class="text-muted">(<%= approval1.approvedAt.toLocaleString() %>)</small>
+                        <% if (approval1.approvedAt) { %><small class="text-muted">(<%= approval1.approvedAt.toLocaleString() %>)</small><% } %>
                     <% } else { %>
                         <span class="badge bg-secondary">Pending</span>
                     <% } %>
@@ -63,7 +63,7 @@
                     <% const approval2 = booking.approvals.find(app => app.approverId === booking.approver2Id && app.level === 2); %>
                     <% if (approval2) { %>
                         <span class="badge bg-<%= approval2.status === 'APPROVED' ? 'success' : 'danger' %>"><%= approval2.status %></span>
-                        <small class="text-muted">(<%= approval2.approvedAt.toLocaleString() %>)</small>
+                        <% if (approval2.approvedAt) { %><small class="text-muted">(<%= approval2.approvedAt.toLocaleString() %>)</small><% } %>
                     <% } else { %>
                         <span class="badge bg-secondary">Pending</span>
                     <% } %>
@@ -81,7 +81,7 @@
                                 <strong>Level <%= approval.level %> Approval by <%= approval.approver.fullName %>:</strong>
                                 <span class="badge bg-<%= approval.status === 'APPROVED' ? 'success' : 'danger' %>"><%= approval.status %></span>
                             </div>
-                            <small class="text-muted"><%= approval.approvedAt.toLocaleString() %></small>
+                            <small class="text-muted"><% if (approval.approvedAt) { %><%= approval.approvedAt.toLocaleString() %><% } else { %>Pending<% } %></small>
                         </li>
                     <% }) %>
                 </ul>

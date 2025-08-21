@@ -30,3 +30,32 @@ export const getAllApprovals = async () => {
 export const getApprovalById = async (id) => {
   return await prisma.approval.findUnique({ where: { id: parseInt(id) } });
 };
+
+export const getPendingApprovalsForApprover = async (approverId) => {
+    return await prisma.approval.findMany({
+        where: {
+            approverId: approverId,
+            status: "PENDING",
+        },
+        include: {
+            booking: true, // Include booking details
+            approver: true, // Include approver details
+        },
+        orderBy: {
+            createdAt: 'asc'
+        }
+    });
+};
+
+export const updateApprovalStatus = async (bookingId, approverId, newStatus) => {
+    return await prisma.approval.updateMany({
+        where: {
+            bookingId: parseInt(bookingId),
+            approverId: parseInt(approverId),
+        },
+        data: {
+            status: newStatus,
+            approvedAt: new Date(),
+        },
+    });
+};

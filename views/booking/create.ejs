@@ -38,16 +38,18 @@
                 <div class="mb-3">
                     <label for="approver1Id" class="form-label">Approver 1:</label>
                     <select id="approver1Id" name="approver1Id" class="form-select">
-                        <% approvers.forEach(approver => { %>
-                            <option value="<%= approver.id %>"><%= approver.fullName %></option>
+                        <option value="">Select Approver</option>
+                        <% approvers.forEach((approver, index) => { %>
+                            <option value="<%= approver.id %>" <%= (index === 0 && approvers.length >= 1) ? 'selected' : '' %>><%= approver.fullName %></option>
                         <% }) %>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="approver2Id" class="form-label">Approver 2:</label>
                     <select id="approver2Id" name="approver2Id" class="form-select">
-                        <% approvers.forEach(approver => { %>
-                            <option value="<%= approver.id %>"><%= approver.fullName %></option>
+                        <option value="">Select Approver</option>
+                        <% approvers.forEach((approver, index) => { %>
+                            <option value="<%= approver.id %>" <%= (index === 1 && approvers.length >= 2) ? 'selected' : '' %>><%= approver.fullName %></option>
                         <% }) %>
                     </select>
                 </div>
@@ -56,91 +58,4 @@
         </div>
     </div>
 </div>
-
-<script>
-  const approver1Select = document.getElementById('approver1Id');
-  const approver2Select = document.getElementById('approver2Id');
-  const allApprovers = <%- JSON.stringify(approvers) %>; // Pass all approvers as JSON
-
-  function updateApproverOptions() {
-    const selectedApprover1 = approver1Select.value;
-    const selectedApprover2 = approver2Select.value;
-
-    // Clear current options in both selects
-    approver1Select.innerHTML = '';
-    approver2Select.innerHTML = '';
-
-    // Populate approver1Select
-    allApprovers.forEach(approver => {
-      const option = document.createElement('option');
-      option.value = approver.id;
-      option.textContent = approver.fullName;
-      if (approver.id == selectedApprover1) {
-        option.selected = true;
-      }
-      approver1Select.appendChild(option);
-    });
-
-    // Populate approver2Select
-    allApprovers.forEach(approver => {
-      const option = document.createElement('option');
-      option.value = approver.id;
-      option.textContent = approver.fullName;
-      if (approver.id == selectedApprover2) {
-        option.selected = true;
-      }
-      approver2Select.appendChild(option);
-    });
-
-    // Disable selected option in the other dropdown
-    if (selectedApprover1) {
-      Array.from(approver2Select.options).forEach(option => {
-        if (option.value == selectedApprover1) {
-          option.disabled = true;
-        }
-      });
-    }
-
-    if (selectedApprover2) {
-      Array.from(approver1Select.options).forEach(option => {
-        if (option.value == selectedApprover2) {
-          option.disabled = true;
-        }
-      });
-    }
-  }
-
-  // Initial update and event listeners
-  updateApproverOptions();
-  approver1Select.addEventListener('change', updateApproverOptions);
-  approver2Select.addEventListener('change', updateApproverOptions);
-
-  // Date validation
-  const bookingForm = document.getElementById('bookingForm');
-  const startDateInput = document.getElementById('startDate');
-  const endDateInput = document.getElementById('endDate');
-
-  bookingForm.addEventListener('submit', function(event) {
-    const startDate = new Date(startDateInput.value);
-    const endDate = new Date(endDateInput.value);
-
-    if (startDate > endDate) {
-      event.preventDefault(); // Prevent form submission
-      // Display toast error message
-      const errorMessage = "Start date cannot be later than end date.";
-      const toastContainer = document.querySelector('.toast-container');
-      const toastHtml = `
-        <div class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-          <div class="d-flex">
-            <div class="toast-body">${errorMessage}</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-          </div>
-        </div>
-      `;
-      toastContainer.innerHTML += toastHtml; // Append new toast
-      const newToastEl = toastContainer.lastElementChild;
-      const newToast = new bootstrap.Toast(newToastEl, { delay: 5000 });
-      newToast.show();
-    }
-  });
-</script>
+    

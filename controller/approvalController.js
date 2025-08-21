@@ -1,6 +1,8 @@
 import {
 	getAllApprovals,
-	createApproval
+	createApproval,
+    getPendingApprovalsForApprover,
+    updateApprovalStatus
 } from "../model/approval.js";
 import { getAllBookings, getPendingBookingsForApprover, getBookingById, updateBookingStatus } from "../model/booking.js"; // Added getBookingById, updateBookingStatus
 import { getAllUsers } from "../model/user.js";
@@ -9,7 +11,8 @@ import prisma from "../utils/db_connection.js"; // Import prisma
 export const getAllApprovalsController = async (req, res) => {
 	try {
 		const filter = req.query.filter || '';
-		const approvals = await getAllApprovals();
+        const approverId = req.user.id; // Get logged-in approver's ID
+		const approvals = await getPendingApprovalsForApprover(approverId); // Fetch only pending approvals for this approver
         res.locals.controllerName = 'Approvals';
 		res.render("approval/index", {
 			approvals,
@@ -43,17 +46,10 @@ export const postApprovalController = async (req, res) => {
 export const approveBookingController = async (req, res) => {
     try {
         const { id: bookingId } = req.params;
-        const { level } = req.body;
         const approverId = req.user.id;
 
-        // Create approval record
-        await createApproval({
-            bookingId: parseInt(bookingId),
-            approverId: approverId,
-            level: parseInt(level),
-            status: 'APPROVED',
-            approvedAt: new Date()
-        });
+        // Update approval record status
+        await updateApprovalStatus(bookingId, approverId, 'APPROVED');
 
         // Check if both approvers have approved
         const booking = await getBookingById(bookingId);
@@ -66,13 +62,12 @@ export const approveBookingController = async (req, res) => {
             where: { bookingId: parseInt(bookingId), status: 'APPROVED' }
         });
 
-        const approvedLevels = approvals.map(app => app.level);
-
-        if (approvedLevels.includes(1) && approvedLevels.includes(2)) {
+        // Assuming there are always two approvers for a booking
+        if (approvals.length === 2) {
             await updateBookingStatus(bookingId, 'APPROVED');
             req.flash('success', 'Booking approved by both levels!');
         } else {
-            req.flash('success', `Booking approved by level ${level}. Waiting for other approvals.`);
+            req.flash('success', `Booking approved. Waiting for other approvals.`);
         }
 
         res.redirect('/approvals');
@@ -85,17 +80,10 @@ export const approveBookingController = async (req, res) => {
 export const rejectBookingController = async (req, res) => {
     try {
         const { id: bookingId } = req.params;
-        const { level } = req.body;
         const approverId = req.user.id;
 
-        // Create rejection record
-        await createApproval({
-            bookingId: parseInt(bookingId),
-            approverId: approverId,
-            level: parseInt(level),
-            status: 'REJECTED',
-            approvedAt: new Date() // Use approvedAt for rejection timestamp as well
-        });
+        // Update approval record status to REJECTED
+        await updateApprovalStatus(bookingId, approverId, 'REJECTED');
 
         // Update booking status to REJECTED
         await updateBookingStatus(bookingId, 'REJECTED');

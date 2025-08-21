@@ -85,6 +85,17 @@ app.use("/approvals", approvalRoutes);
 app.use("/drivers", driverRoutes); // Mount driverRoutes
 app.use("/usages", usageRoutes); // Mount usageRoutes
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Something broke!';
+    res.status(statusCode).json({
+        success: false,
+        message: message,
+        stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack
+    });
+});
+
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });

@@ -11,6 +11,7 @@
 			<th>Level</th>
 			<th>Status</th>
 			<th>Approved At</th>
+			<th>Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -24,6 +25,20 @@
 			<td>
 				<%= approval.approvedAt ? approval.approvedAt.toLocaleString() :
 				'-' %>
+			</td>
+			<td>
+				<% if (approval.status === 'PENDING' && currentUser && currentUser.id === approval.approverId && currentUser.role === 'APPROVER') { %>
+					<form action="/approvals/<%= approval.bookingId %>/approve" method="POST" class="d-inline">
+						<button type="submit" class="btn btn-success btn-sm">Approve</button>
+					</form>
+					<form action="/approvals/<%= approval.bookingId %>/reject" method="POST" class="d-inline ms-2">
+						<button type="submit" class="btn btn-danger btn-sm">Reject</button>
+					</form>
+				<% } else if (approval.status === 'APPROVED') { %>
+					<span class="badge bg-success">Approved</span>
+				<% } else if (approval.status === 'REJECTED') { %>
+					<span class="badge bg-danger">Rejected</span>
+				<% } %>
 			</td>
 		</tr>
 		<% }); %>

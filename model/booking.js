@@ -21,7 +21,13 @@ export const createBooking = async (data) => {
 	});
 	if (!driver) throw new Error(`Driver with ID ${data.driverId} not found.`);
 
-	return await prisma.booking.create({
+	const approver1 = await prisma.user.findUnique({ where: { id: data.approver1Id } });
+    if (!approver1) throw new Error(`Approver 1 with ID ${data.approver1Id} not found.`);
+
+    const approver2 = await prisma.user.findUnique({ where: { id: data.approver2Id } });
+    if (!approver2) throw new Error(`Approver 2 with ID ${data.approver2Id} not found.`);
+
+	const newBooking = await prisma.booking.create({
 		data: {
 			...data,
 			booking_number,
@@ -31,6 +37,32 @@ export const createBooking = async (data) => {
 			approver2Id: data.approver2Id,
 		},
 	});
+
+	// Create approval records for approver1 and approver2
+	await prisma.approval.create({
+		data: {
+			bookingId: newBooking.id,
+			approverId: data.approver1Id,
+			status: "PENDING",
+			booking_number: newBooking.booking_number,
+			approver_username: approver1.username,
+            level: 1,
+		},
+	});
+
+	await prisma.approval.create({
+		data: {
+
+			bookingId: newBooking.id,
+			approverId: data.approver2Id,
+			status: "PENDING",
+			booking_number: newBooking.booking_number,
+			approver_username: approver2.username,
+            level: 2,
+		},
+	});
+
+	return newBooking;
 };
 
 export const getAllBookings = async () => {
