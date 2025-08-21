@@ -25,7 +25,7 @@ import { getDashboardStatsController } from "./controller/usageController.js"; /
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3003;
 
 // Get __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -86,14 +86,14 @@ app.use("/drivers", driverRoutes); // Mount driverRoutes
 app.use("/usages", usageRoutes); // Mount usageRoutes
 
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    const statusCode = err.statusCode || 500;
-    const message = err.message || 'Something broke!';
-    res.status(statusCode).json({
-        success: false,
-        message: message,
-        stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack
-    });
+	console.error(err.stack);
+	const statusCode = err.statusCode || 500;
+	const message = err.message || "Something broke!";
+	res.status(statusCode).json({
+		success: false,
+		message: message,
+		stack: process.env.NODE_ENV === "production" ? "🥞" : err.stack,
+	});
 });
 
 app.listen(port, () => {

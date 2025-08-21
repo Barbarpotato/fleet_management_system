@@ -1,5 +1,7 @@
-# Use an official Node.js runtime as a parent image
 FROM node:18-alpine
+
+# Install OpenSSL
+RUN apk add --no-cache openssl
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -23,3 +25,5 @@ EXPOSE 3000
 # Define the command to run the app
 # npm start will typically run `node index.js` as defined in package.json
 CMD [ "npm", "start" ]
+
+
