@@ -3,8 +3,10 @@
 <h1>Bookings</h1>
 
 <div class="mb-3">
-  <a href="/bookings/create" class="btn btn-primary">Create Booking</a>
-  <a href="/bookings/export/excel" class="btn btn-success ms-2">Export to Excel</a>
+  <% if (currentUser && currentUser.role !== 'APPROVER') { %>
+<a href="/bookings/create" class="btn btn-primary">Create Booking</a>
+<a href="/bookings/export/excel" class="btn btn-success ms-2">Export to Excel</a>
+<% } %>
 </div>
 
 <table class="table">

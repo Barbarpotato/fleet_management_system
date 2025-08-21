@@ -8,10 +8,12 @@ import prisma from "../utils/db_connection.js"; // Import prisma
 
 export const getAllApprovalsController = async (req, res) => {
 	try {
+		const filter = req.query.filter || '';
 		const approvals = await getAllApprovals();
         res.locals.controllerName = 'Approvals';
 		res.render("approval/index", {
-			approvals
+			approvals,
+            filter
 		});
 	} catch (error) {
 		res.status(500).send(error.message);

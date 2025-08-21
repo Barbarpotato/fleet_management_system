@@ -10,6 +10,7 @@ export const getAllBookingsController = async (req, res) => {
         res.locals.controllerName = 'Bookings';
 		res.render("booking/index", {
 			bookings,
+            currentUser: req.user
 		});
 	} catch (error) {
 		res.status(500).send(error.message);
